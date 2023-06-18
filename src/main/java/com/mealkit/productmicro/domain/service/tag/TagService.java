@@ -12,5 +12,5 @@ public interface TagService {
 
     List<TagDto> getTagsByIds(List<Long> tagIdList);
 
-    void addTag(TagDto tagDto);
+    void createTag(TagDto tagDto);
 }

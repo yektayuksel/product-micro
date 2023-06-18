@@ -6,7 +6,7 @@ public interface IngredientService {
 
     void createIngredient(IngredientDto ingredientDto);
     void deleteIngredient(Long ingredientId);
-    void updateIngredient(IngredientDto ingredientDto) throws Exception;
+    void updateIngredient(IngredientDto ingredientDto, Long ingredientId) throws Exception;
 
 
 }

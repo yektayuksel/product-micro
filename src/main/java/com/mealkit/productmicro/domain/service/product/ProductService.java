@@ -16,5 +16,5 @@ public interface ProductService {
 
     void updateProduct(ProductDto productDto);
 
-    void addProduct(ProductDto productDto);
+    void createProduct(ProductDto productDto);
 }

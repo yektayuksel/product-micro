@@ -4,20 +4,18 @@ import com.mealkit.productmicro.dao.entity.IngredientEntity;
 import com.mealkit.productmicro.dao.repository.IngredientRepository;
 import com.mealkit.productmicro.domain.dto.IngredientDto;
 import com.mealkit.productmicro.mapper.IngredientMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
 
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, IngredientMapper ingredientMapper) {
-        this.ingredientRepository = ingredientRepository;
-        this.ingredientMapper = ingredientMapper;
-    }
 
-    IngredientRepository ingredientRepository;
-    IngredientMapper ingredientMapper;
+    private final IngredientRepository ingredientRepository;
+    private final IngredientMapper ingredientMapper;
 
     @Override
     public void createIngredient(IngredientDto ingredientDto) {
@@ -33,12 +31,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void updateIngredient(IngredientDto ingredientDto) throws Exception {
+    public void updateIngredient(IngredientDto ingredientDto, Long ingredientId) throws Exception {
 
-        Optional<IngredientEntity> ing = ingredientRepository.findById(ingredientDto.getId());
+        Optional<IngredientEntity> ing = ingredientRepository.findById(ingredientId);
         if(ing.isPresent()){
             IngredientEntity ingredientEntity = ing.get();
-            ingredientEntity.setAmount(ingredientDto.getAmount());
+            ingredientEntity.setUnitOfMeasure(ingredientDto.getUnitOfMeasure());
             ingredientEntity.setName(ingredientDto.getName());
             ingredientRepository.save(ingredientEntity);
         }else {

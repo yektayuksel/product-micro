@@ -2,6 +2,7 @@ package com.mealkit.productmicro.mapper;
 
 import com.mealkit.productmicro.dao.entity.TagEntity;
 import com.mealkit.productmicro.domain.dto.TagDto;
+import com.mealkit.productmicro.web.request.TagApiInput;
 import com.mealkit.productmicro.web.response.TagApiOutput;
 import org.mapstruct.Mapper;
 
@@ -15,5 +16,7 @@ public interface TagMapper {
     TagDto tagEntityToDto(TagEntity tagEntity);
     TagEntity tagDtoToEntity(TagDto tagDto);
     List<TagDto> tagEntityListToDtoList(List<TagEntity> tagEntityList);
+
+    TagDto tagApiInputToDto(TagApiInput tagApiInput);
     List<TagEntity> tagDtoListToEntityList(List<TagDto> tagDtoList);
 }

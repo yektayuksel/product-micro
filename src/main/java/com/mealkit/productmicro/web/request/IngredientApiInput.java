@@ -1,40 +1,19 @@
 package com.mealkit.productmicro.web.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class IngredientApiInput {
 
-    private Long id;
     private String name;
-    private BigDecimal amount;
+    private String unitOfMeasure;
 
-    public IngredientApiInput(Long id, String name, BigDecimal amount) {
-        this.id = id;
-        this.name = name;
-        this.amount = amount;
-    }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
 }

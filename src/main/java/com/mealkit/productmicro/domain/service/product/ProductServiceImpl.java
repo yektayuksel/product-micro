@@ -4,21 +4,20 @@ import com.mealkit.productmicro.dao.entity.ProductEntity;
 import com.mealkit.productmicro.dao.repository.ProductRepository;
 import com.mealkit.productmicro.domain.dto.ProductDto;
 import com.mealkit.productmicro.mapper.ProductMapper;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService{
 
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductMapper productMapper, ProductRepository productRepository) {
-        this.productMapper = productMapper;
-        this.productRepository = productRepository;
-    }
 
     @Override
     public ProductDto getProductById(Long productId) throws Exception {
@@ -69,7 +68,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void addProduct(ProductDto productDto) {
+    public void createProduct(ProductDto productDto) {
 
         ProductEntity productEntity = productMapper.productDtoToEntity(productDto);
         productRepository.save(productEntity);

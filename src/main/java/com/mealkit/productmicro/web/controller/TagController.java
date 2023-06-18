@@ -3,7 +3,10 @@ package com.mealkit.productmicro.web.controller;
 import com.mealkit.productmicro.domain.dto.TagDto;
 import com.mealkit.productmicro.domain.service.tag.TagService;
 import com.mealkit.productmicro.mapper.TagMapper;
+import com.mealkit.productmicro.web.request.TagApiInput;
 import com.mealkit.productmicro.web.response.TagApiOutput;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,14 +18,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tag")
+@Tag(name= "Tag Service")
+@RequiredArgsConstructor
 public class TagController {
 
     private final TagService tagService;
     private final TagMapper tagMapper;
-    public TagController(TagService tagService, TagMapper tagMapper) {
-        this.tagService = tagService;
-        this.tagMapper = tagMapper;
-    }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<TagApiOutput>> getTags() {
@@ -38,16 +39,15 @@ public class TagController {
     }
 
     @PostMapping("/getTagsByIds")
-    public ResponseEntity<List<TagDto>> getTagsByIds(List<Long> tagIdList) {
+    public ResponseEntity<List<TagApiOutput>> getTagsByIds(List<Long> tagIdList) {
 
         List<TagDto> tagDtoList = tagService.getTagsByIds(tagIdList);
-        return new ResponseEntity<>(tagDtoList, HttpStatus.OK);
+        return new ResponseEntity<>(tagMapper.tagDtoListToApiOutputList(tagDtoList), HttpStatus.OK);
     }
 
-    @PostMapping("/addTag")
-    public ResponseEntity<Void> addTag(TagDto tagDto) {
-
-        tagService.addTag(tagDto);
+    @PostMapping("/createTag")
+    public ResponseEntity<Void> createTag(TagApiInput tagApiInput) {
+        tagService.createTag(tagMapper.tagApiInputToDto(tagApiInput));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

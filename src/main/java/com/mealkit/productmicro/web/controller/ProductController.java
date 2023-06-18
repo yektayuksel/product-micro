@@ -3,8 +3,10 @@ package com.mealkit.productmicro.web.controller;
 import com.mealkit.productmicro.domain.dto.ProductDto;
 import com.mealkit.productmicro.domain.service.product.ProductService;
 import com.mealkit.productmicro.mapper.ProductMapper;
+import com.mealkit.productmicro.web.request.ProductApiInput;
 import com.mealkit.productmicro.web.response.ProductApiOutput;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +16,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/product")
 @Tag(name= "Product Service")
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
     private final ProductMapper productMapper;
-
-
-    public ProductController(ProductService productService, ProductMapper productMapper) {
-        this.productService = productService;
-        this.productMapper = productMapper;
-
-    }
 
 
     @GetMapping("/getProductById/{productId}")
@@ -58,14 +54,16 @@ public class ProductController {
     }
 
     @PutMapping("/updateProduct")
-    public ResponseEntity<Void> updateProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<Void> updateProduct(@RequestBody ProductApiInput productApiInput) {
+
+        ProductDto productDto = productMapper.productApiInputToDto(productApiInput);
         productService.updateProduct(productDto);
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<Void> addProduct(@RequestBody ProductDto productDto) {
-         productService.addProduct(productDto);
+    @PostMapping("/createProduct")
+    public ResponseEntity<Void> createProduct(@RequestBody ProductDto productDto) {
+         productService.createProduct(productDto);
          return new ResponseEntity<>(HttpStatus.OK);
 
 

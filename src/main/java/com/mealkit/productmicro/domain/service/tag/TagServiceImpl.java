@@ -4,6 +4,7 @@ import com.mealkit.productmicro.dao.entity.TagEntity;
 import com.mealkit.productmicro.dao.repository.TagRepository;
 import com.mealkit.productmicro.domain.dto.TagDto;
 import com.mealkit.productmicro.mapper.TagMapper;
+import com.mealkit.productmicro.web.request.TagApiInput;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class TagServiceImpl implements TagService{
     }
 
     @Override
-    public void addTag(TagDto tagDto) {
+    public void createTag(TagDto tagDto) {
 
         TagEntity tagEntity = tagMapper.tagDtoToEntity(tagDto);
         tagRepository.save(tagEntity);
