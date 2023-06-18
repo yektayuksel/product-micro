@@ -34,7 +34,16 @@ public class ProductEntity {
 
     @Lob
     @Column(name = "image")
-    private byte[] image;
+    private String imageUrl;
+
+    @Column(name = "cooking_time")
+    private Integer cookingTime;
+
+    @Column(name = "calories")
+    private Long calories;
+
+    @Column(name = "difficulty")
+    private String difficulty;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
@@ -44,11 +53,13 @@ public class ProductEntity {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private Set<TagEntity> tagEntities;
+    private Set<TagEntity> tags;
 
 
-    @OneToMany(mappedBy = "productEntity")
-    Set<ProductIngredientEntity> productIngredientEntities;
+    @OneToMany(mappedBy = "product")
+    private Set<ProductIngredientEntity> ingredients;
+
+
 
 
 }

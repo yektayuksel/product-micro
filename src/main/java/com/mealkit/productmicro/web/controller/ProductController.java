@@ -62,8 +62,8 @@ public class ProductController {
     }
 
     @PostMapping("/createProduct")
-    public ResponseEntity<Void> createProduct(@RequestBody ProductDto productDto) {
-         productService.createProduct(productDto);
+    public ResponseEntity<Void> createProduct(@RequestBody ProductApiInput productApiInput) throws Exception {
+         productService.createProduct(productApiInput);
          return new ResponseEntity<>(HttpStatus.OK);
 
 

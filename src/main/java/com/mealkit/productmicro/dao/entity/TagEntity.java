@@ -22,7 +22,7 @@ public class TagEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "tagEntities")
+    @ManyToMany(mappedBy = "tags")
     Set<ProductEntity> productEntities;
 
 }

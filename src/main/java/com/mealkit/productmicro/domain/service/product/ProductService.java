@@ -1,6 +1,7 @@
 package com.mealkit.productmicro.domain.service.product;
 
 import com.mealkit.productmicro.domain.dto.ProductDto;
+import com.mealkit.productmicro.web.request.ProductApiInput;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface ProductService {
 
     void updateProduct(ProductDto productDto);
 
-    void createProduct(ProductDto productDto);
+    void createProduct(ProductApiInput productApiInput) throws Exception;
 }

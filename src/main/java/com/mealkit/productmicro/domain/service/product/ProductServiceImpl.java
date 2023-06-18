@@ -1,22 +1,33 @@
 package com.mealkit.productmicro.domain.service.product;
 
 import com.mealkit.productmicro.dao.entity.ProductEntity;
+import com.mealkit.productmicro.dao.entity.ProductIngredientEntity;
+import com.mealkit.productmicro.dao.entity.ProductIngredientKey;
+import com.mealkit.productmicro.dao.entity.TagEntity;
+import com.mealkit.productmicro.dao.repository.ProductIngredientRepository;
 import com.mealkit.productmicro.dao.repository.ProductRepository;
+import com.mealkit.productmicro.dao.repository.TagRepository;
 import com.mealkit.productmicro.domain.dto.ProductDto;
+import com.mealkit.productmicro.domain.dto.ProductIngredientDto;
+import com.mealkit.productmicro.mapper.ProductIngredientMapper;
 import com.mealkit.productmicro.mapper.ProductMapper;
 
+import com.mealkit.productmicro.web.request.ProductApiInput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService{
 
     private final ProductMapper productMapper;
+    private final ProductIngredientRepository productIngredientRepository;
     private final ProductRepository productRepository;
+    private final TagRepository tagRepository;
+
+
 
 
     @Override
@@ -25,7 +36,9 @@ public class ProductServiceImpl implements ProductService{
         Optional<ProductEntity> productEntity = productRepository.findById(productId);
 
         if(productEntity.isPresent()){
-            return productMapper.productEntityToDto(productEntity.get());
+
+            ProductEntity p = productEntity.get();
+            return productEntityToDto(p);
         }else{
             throw new Exception("ProductNotFound");
         }
@@ -36,13 +49,22 @@ public class ProductServiceImpl implements ProductService{
     public List<ProductDto> getProductsById(List<Long> productIdList) {
 
         List<ProductEntity> productEntityList = productRepository.findAllById(productIdList);
-        return productMapper.productEntityListToDtoList(productEntityList);
+        List<ProductDto> productDtoList = new ArrayList<>();
+        for(ProductEntity productEntity : productEntityList){
+            productDtoList.add(productEntityToDto(productEntity));
+        }
+        return productDtoList;
     }
 
     @Override
     public List<ProductDto> getProductByTag(List<Long> tagIdList) {
 
-        return productMapper.productEntityListToDtoList(productRepository.findByTagIdIn(tagIdList));
+        List<ProductEntity> productEntityList = productRepository.findByTagIdIn(tagIdList);
+        List<ProductDto> productDtoList = new ArrayList<>();
+        for(ProductEntity productEntity : productEntityList){
+            productDtoList.add(productEntityToDto(productEntity));
+        }
+        return productDtoList;
     }
 
     @Override
@@ -62,15 +84,67 @@ public class ProductServiceImpl implements ProductService{
             productEntity.setDescription(productDto.getDescription());
             productEntity.setPrice(productDto.getPrice());
             productEntity.setRecipe(productDto.getRecipe());
-            productEntity.setImage(productDto.getImage());
+            productEntity.setImageUrl(productDto.getImageUrl());
             productRepository.save(productEntity);
         }
     }
 
     @Override
-    public void createProduct(ProductDto productDto) {
+    public void createProduct(ProductApiInput productApiInput) throws Exception {
 
-        ProductEntity productEntity = productMapper.productDtoToEntity(productDto);
+        ProductEntity productEntity = new ProductEntity();
+        productEntity = productRepository.save(productEntity);
+
+        productEntity.setTags(new HashSet<>());
+        productEntity.setIngredients(new HashSet<>());
+
+        for(Long tagId : productApiInput.getTagIds()){
+            Optional<TagEntity> tag = tagRepository.findById(tagId);
+            if(tag.isPresent()){
+                productEntity.getTags().add(tag.get());
+            }else{
+                throw new Exception("Tag with id " + tagId + " not found");
+            }
+        }
+
+        for(ProductIngredientDto productIngredientDto : productApiInput.getIngredients()){
+            ProductIngredientEntity productIngredientEntity = new ProductIngredientEntity();
+            ProductIngredientKey productIngredientKey = new ProductIngredientKey();
+            productIngredientKey.setProductId(productEntity.getId());
+            productIngredientKey.setIngredientId(productIngredientDto.getId());
+            productIngredientEntity.setAmount(productIngredientDto.getAmount());
+            productIngredientEntity.setProduct(productEntity);
+            productIngredientEntity.setId(productIngredientKey);
+            productIngredientRepository.save(productIngredientEntity);
+        }
+        productEntity.setProductName(productApiInput.getProductName());
+        productEntity.setDescription(productApiInput.getDescription());
+        productEntity.setImageUrl(productApiInput.getImageUrl());
+        productEntity.setPrice(productApiInput.getPrice());
+        productEntity.setRecipe(productApiInput.getRecipe());
+
         productRepository.save(productEntity);
+    }
+
+    private ProductDto productEntityToDto(ProductEntity p){
+
+        ProductDto productDto = new ProductDto();
+        productDto.setDifficulty(p.getDifficulty());
+        productDto.setProductName(p.getProductName());
+        productDto.setCalories(p.getCalories());
+        productDto.setCookingTime(p.getCookingTime());
+        productDto.setRecipe(p.getRecipe());
+        productDto.setDescription(p.getDescription());
+        productDto.setImageUrl(p.getImageUrl());
+
+        for(ProductIngredientEntity ingredient : p.getIngredients()){
+            productDto.getIngredients().add(new ProductIngredientDto(ingredient.getId().getIngredientId(), ingredient.getAmount()));
+        }
+
+        for(TagEntity tag : p.getTags()){
+            productDto.getTagIds().add(tag.getId());
+        }
+
+        return productDto;
     }
 }

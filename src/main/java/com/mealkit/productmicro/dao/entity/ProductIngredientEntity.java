@@ -1,5 +1,6 @@
 package com.mealkit.productmicro.dao.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,18 +10,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "product_ingredient")
 public class ProductIngredientEntity {
+
     @EmbeddedId
-    ProductIngredientKey id;
+    private ProductIngredientKey id;
 
     @ManyToOne
-    @MapsId("product_id")
     @JoinColumn(name = "product_id")
-    ProductEntity productEntity;
-    @ManyToOne
-    @MapsId("ingredientId")
-    @JoinColumn(name = "ingredient_id")
-    IngredientEntity ingredientEntity;
+    @MapsId("productId")
+    private ProductEntity product;
 
-    Double amount;
+    private Double amount;
 }

@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,24 +28,27 @@ public class TagController {
         return new ResponseEntity<>(tagMapper.tagDtoListToApiOutputList(tagDtoList), HttpStatus.OK);
     }
 
-    @GetMapping("/getById")
-    public ResponseEntity<TagApiOutput> getTagById(Long tagId) throws Exception {
+    @GetMapping("/getById/{tagId}")
+    public ResponseEntity<TagApiOutput> getTagById(@PathVariable Long tagId) throws Exception {
 
         TagDto tagDto = tagService.getTagById(tagId);
+        if (tagDto == null) {
+            throw new Exception("Tag with id " + tagId + " not found");
+        }
         return new ResponseEntity<>(tagMapper.tagDtoToApiOutput(tagDto), HttpStatus.OK);
     }
 
     @PostMapping("/getTagsByIds")
-    public ResponseEntity<List<TagApiOutput>> getTagsByIds(List<Long> tagIdList) {
+    public ResponseEntity<List<TagApiOutput>> getTagsByIds(@RequestBody List<Long> tagIdList) {
 
         List<TagDto> tagDtoList = tagService.getTagsByIds(tagIdList);
         return new ResponseEntity<>(tagMapper.tagDtoListToApiOutputList(tagDtoList), HttpStatus.OK);
     }
 
     @PostMapping("/createTag")
-    public ResponseEntity<Void> createTag(TagApiInput tagApiInput) {
+    public ResponseEntity<Void> createTag(@RequestBody TagApiInput tagApiInput) {
         tagService.createTag(tagMapper.tagApiInputToDto(tagApiInput));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

@@ -12,7 +12,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
     @Query("SELECT p FROM ProductEntity p WHERE p.id IN :productIds")
     List<ProductEntity> findAllById(List<Long> productIds);
 
-    @Query("SELECT p FROM ProductEntity p JOIN p.tagEntities t WHERE t.id IN :tagIds")
+    @Query("SELECT p FROM ProductEntity p JOIN p.tags t WHERE t.id IN :tagIds")
     List<ProductEntity> findByTagIdIn(List<Long> tagIds);
 
 }
