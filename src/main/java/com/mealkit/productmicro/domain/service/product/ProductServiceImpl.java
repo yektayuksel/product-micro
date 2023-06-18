@@ -9,7 +9,6 @@ import com.mealkit.productmicro.dao.repository.ProductRepository;
 import com.mealkit.productmicro.dao.repository.TagRepository;
 import com.mealkit.productmicro.domain.dto.ProductDto;
 import com.mealkit.productmicro.domain.dto.ProductIngredientDto;
-import com.mealkit.productmicro.mapper.ProductIngredientMapper;
 import com.mealkit.productmicro.mapper.ProductMapper;
 
 import com.mealkit.productmicro.web.request.ProductApiInput;
@@ -27,16 +26,12 @@ public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
     private final TagRepository tagRepository;
 
-
-
-
     @Override
     public ProductDto getProductById(Long productId) throws Exception {
 
         Optional<ProductEntity> productEntity = productRepository.findById(productId);
 
         if(productEntity.isPresent()){
-
             ProductEntity p = productEntity.get();
             return productEntityToDto(p);
         }else{
@@ -122,7 +117,9 @@ public class ProductServiceImpl implements ProductService{
         productEntity.setImageUrl(productApiInput.getImageUrl());
         productEntity.setPrice(productApiInput.getPrice());
         productEntity.setRecipe(productApiInput.getRecipe());
-
+        productEntity.setCalories(productApiInput.getCalories());
+        productEntity.setCookingTime(productApiInput.getCookingTime());
+        productEntity.setDifficulty(productApiInput.getDifficulty());
         productRepository.save(productEntity);
     }
 
