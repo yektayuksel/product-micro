@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductIngredientDto {
     private Long id;
-    private Double amount;
+    private Double count;
 }

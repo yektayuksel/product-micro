@@ -40,9 +40,9 @@ public class ProductController {
 
 
     @PostMapping("/getByTags")
-    public ResponseEntity<List<ProductApiOutput>> getProductByTag(List<Long> tagIdList) {
+    public ResponseEntity<List<ProductApiOutput>> getProductByTag(@RequestBody List<Long> tagIdList) {
 
-        List<ProductApiOutput> productApiOutput = productMapper.productDtoToApiOutputList(productService.getProductsById(tagIdList));
+        List<ProductApiOutput> productApiOutput = productMapper.productDtoToApiOutputList(productService.getProductByTag(tagIdList));
         return new ResponseEntity<>(productApiOutput, HttpStatus.OK);
     }
 
@@ -50,7 +50,7 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
 
         productService.deleteProduct(productId);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.GONE);
     }
 
     @PutMapping("/updateProduct")

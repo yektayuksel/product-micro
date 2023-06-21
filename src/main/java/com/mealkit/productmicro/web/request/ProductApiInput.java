@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Data
@@ -14,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProductApiInput {
 
+    private Long id;
     private String productName;
     private String description;
     private String imageUrl;

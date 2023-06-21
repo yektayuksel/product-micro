@@ -23,6 +23,6 @@ public class TagEntity {
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    Set<ProductEntity> productEntities;
+    private Set<ProductEntity> products;
 
 }

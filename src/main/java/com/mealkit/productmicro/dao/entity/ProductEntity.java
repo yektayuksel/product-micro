@@ -45,14 +45,10 @@ public class ProductEntity {
     @Column(name = "difficulty")
     private String difficulty;
 
-    @ManyToMany(cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
-    })
-    @JoinTable(name = "product_tag",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "Product_Tag",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<TagEntity> tags;
 
 

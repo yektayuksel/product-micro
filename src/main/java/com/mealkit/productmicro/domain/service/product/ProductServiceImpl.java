@@ -12,6 +12,7 @@ import com.mealkit.productmicro.domain.dto.ProductIngredientDto;
 import com.mealkit.productmicro.mapper.ProductMapper;
 
 import com.mealkit.productmicro.web.request.ProductApiInput;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public List<ProductDto> getProductsById(List<Long> productIdList) {
 
         List<ProductEntity> productEntityList = productRepository.findAllById(productIdList);
@@ -52,9 +54,10 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public List<ProductDto> getProductByTag(List<Long> tagIdList) {
 
-        List<ProductEntity> productEntityList = productRepository.findByTagIdIn(tagIdList);
+        List<ProductEntity> productEntityList = productRepository.findByTagIdIn(tagIdList, tagIdList.size());
         List<ProductDto> productDtoList = new ArrayList<>();
         for(ProductEntity productEntity : productEntityList){
             productDtoList.add(productEntityToDto(productEntity));
@@ -107,7 +110,7 @@ public class ProductServiceImpl implements ProductService{
             ProductIngredientKey productIngredientKey = new ProductIngredientKey();
             productIngredientKey.setProductId(productEntity.getId());
             productIngredientKey.setIngredientId(productIngredientDto.getId());
-            productIngredientEntity.setAmount(productIngredientDto.getAmount());
+            productIngredientEntity.setCount(productIngredientDto.getCount());
             productIngredientEntity.setProduct(productEntity);
             productIngredientEntity.setId(productIngredientKey);
             productIngredientRepository.save(productIngredientEntity);
@@ -126,6 +129,9 @@ public class ProductServiceImpl implements ProductService{
     private ProductDto productEntityToDto(ProductEntity p){
 
         ProductDto productDto = new ProductDto();
+        productDto.setIngredients(new ArrayList<>());
+        productDto.setTagIds(new ArrayList<>());
+        productDto.setId(p.getId());
         productDto.setDifficulty(p.getDifficulty());
         productDto.setProductName(p.getProductName());
         productDto.setCalories(p.getCalories());
@@ -133,13 +139,18 @@ public class ProductServiceImpl implements ProductService{
         productDto.setRecipe(p.getRecipe());
         productDto.setDescription(p.getDescription());
         productDto.setImageUrl(p.getImageUrl());
+        productDto.setPrice(p.getPrice());
 
-        for(ProductIngredientEntity ingredient : p.getIngredients()){
-            productDto.getIngredients().add(new ProductIngredientDto(ingredient.getId().getIngredientId(), ingredient.getAmount()));
+        List<ProductIngredientEntity> ingredients = productIngredientRepository.getByProductId(p.getId());
+
+        for(ProductIngredientEntity ingredient : ingredients){
+            productDto.getIngredients().add(new ProductIngredientDto(ingredient.getId().getIngredientId(), ingredient.getCount()));
+
         }
 
-        for(TagEntity tag : p.getTags()){
-            productDto.getTagIds().add(tag.getId());
+        List<Long> tagIds = productRepository.getProductTagsById(p.getId());
+        for(Long id : tagIds){
+            productDto.getTagIds().add(id);
         }
 
         return productDto;

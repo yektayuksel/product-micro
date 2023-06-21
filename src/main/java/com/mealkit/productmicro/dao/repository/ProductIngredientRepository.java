@@ -11,6 +11,6 @@ import java.util.List;
 public interface ProductIngredientRepository extends JpaRepository<ProductIngredientEntity, ProductIngredientKey> {
 
 
-    @Query("SELECT p.id.ingredientId, p.amount FROM ProductIngredientEntity p WHERE p.id.productId = :productId")
-    List<ProductIngredientDto> getByProductId(Long productId);
+    @Query("SELECT p FROM ProductIngredientEntity p WHERE p.id.productId = :productId")
+    List<ProductIngredientEntity> getByProductId(Long productId);
 }

@@ -21,5 +21,5 @@ public class ProductIngredientEntity {
     @MapsId("productId")
     private ProductEntity product;
 
-    private Double amount;
+    private Double count;
 }

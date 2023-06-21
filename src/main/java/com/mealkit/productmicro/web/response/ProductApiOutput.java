@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductApiOutput {
 
+    private Long id;
     private String productName;
     private String description;
     private String imageUrl;
