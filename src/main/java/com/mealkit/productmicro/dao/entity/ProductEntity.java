@@ -32,7 +32,6 @@ public class ProductEntity {
     @Column(name = "price")
     private Double price;
 
-    @Lob
     @Column(name = "image")
     private String imageUrl;
 
